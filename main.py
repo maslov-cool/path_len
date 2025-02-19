@@ -44,7 +44,7 @@ for i in ['Россия, Москва, Бородинский мост',
     A.append(main(i))
 for i in range(1, len(A)):
     s += ((float(A[i][0]) - float(A[i - 1][0])) ** 2 + (float(A[i][1]) - float(A[i - 1][1])) ** 2) ** 0.5 * 111
-print(f'путь от киевского вокзала составляет {s} км')
+print(f'путь от киевского вокзала до офиса яндекса составляет {s} км')
 
 server_address = 'https://static-maps.yandex.ru/v1?'
 api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
@@ -54,9 +54,13 @@ ll_spn = f'll={','.join(A[0])}&spn=0.022,0.022'
 
 map_request = f"{server_address}{ll_spn}&apikey={api_key}&pl="
 for i in A[1:]:
-    map_request += f"{i[0]},{i[1]},"
-response = requests.get(map_request[:-1])
-
+    map_request += f"{i[0]},{i[1]}"
+    if i != A[-1]:
+        map_request += ','
+map_request += '&pt='
+map_request += f"{A[0][0]},{A[0][1]},comma"
+response = requests.get(map_request)
+print(map_request)
 if not response:
     print("Ошибка выполнения запроса:")
     print("Http статус:", response.status_code, "(", response.reason, ")")
